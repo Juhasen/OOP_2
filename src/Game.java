@@ -6,9 +6,7 @@ public class Game {
         if (args.length != 1) {
             throw new IllegalArgumentException("Zła ilość argumentów");
         }
-
         int range = 0;
-
         try {
             range = Integer.parseInt(args[0]);
             if (range < 1) {
@@ -50,8 +48,6 @@ public class Game {
                             break;
                         } else if (answer == 'n') {
                             System.out.println("Gra zakończona :(");
-                            scanner.close();
-                            charScanner.close();
                             isGuessed = true;
                             break;
                         }
@@ -73,15 +69,7 @@ public class Game {
                 System.out.println(e.getMessage());
             }
         }
-    }
-
-    public static int checkInput(char answer) {
-        if (answer == 'y') {
-            return 1;
-        } else if (answer == 'n') {
-            return 2;
-        } else {
-            return 0;
-        }
+        scanner.close();
+        charScanner.close();
     }
 }
