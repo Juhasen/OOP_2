@@ -61,7 +61,7 @@ public class Game {
                     }
                 }
                 else if (guess > range || guess < 0) {
-                    System.out.println("Liczba spoza zakresu!");
+                    throw new IllegalArgumentException("Liczba spoza zakresu!");
                 }
                 else if (guess > target) {
                     System.out.println("Za duża liczba!");
