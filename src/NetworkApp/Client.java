@@ -1,3 +1,5 @@
+package NetworkApp;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,7 +16,7 @@ public class Client {
         try {
             Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
         } catch (IOException e) {
-            System.out.println("Server is not running");
+            System.out.println("NetworkApp.Server is not running");
             return;
         }
     }
