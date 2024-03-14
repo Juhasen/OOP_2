@@ -13,7 +13,9 @@ public class Game {
                 throw new IllegalArgumentException("Zbyt mały zakres");
             }
         } catch (Exception e) {
+            System.out.println("Błąd wczytania argumentu!");
             System.out.println(e.getMessage());
+            return;
         }
 
         Random rand = new Random();
@@ -52,12 +54,12 @@ public class Game {
                             break;
                         }
                         else {
-                            throw new IllegalArgumentException("Podałeś zły znak! Spróbuj jeszcze raz.");
+                           System.out.println("Podałeś zły znak! Spróbuj jeszcze raz.");
                         }
                     }
                 }
                 else if (guess > range || guess < 0) {
-                    throw new IllegalArgumentException("Liczba spoza zakresu!");
+                    System.out.println("Liczba spoza zakresu!");
                 }
                 else if (guess > target) {
                     System.out.println("Za duża liczba!");

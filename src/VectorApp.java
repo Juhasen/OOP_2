@@ -63,6 +63,7 @@ public class VectorApp {
             try {
                 int liczba = Integer.parseInt(liczbaTekst);
                 wektor.add(liczba);
+                System.out.println(liczba);
             } catch (NumberFormatException e) {
                 break;
             }
