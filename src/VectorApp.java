@@ -4,8 +4,20 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class VectorApp {
+class WektoryRoznejDlugosciException extends Exception {
+    private final int lenA;
+    private final int lenB;
+    public WektoryRoznejDlugosciException(int lenA, int lenB) {
+        this.lenA = lenA;
+        this.lenB = lenB;
+    }
+    @Override
+    public String getMessage() {
+        return "Długość pierwszego wektora to " + lenA + " a drugiego to " + lenB;
+    }
+}
 
+public class VectorApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -61,21 +73,5 @@ public class VectorApp {
                 file.write(number + " ");
             }
         }
-    }
-}
-
-class WektoryRoznejDlugosciException extends Exception {
-
-    private final int lenA;
-    private final int lenB;
-
-    public WektoryRoznejDlugosciException(int lenA, int lenB) {
-        this.lenA = lenA;
-        this.lenB = lenB;
-    }
-
-    @Override
-    public String getMessage() {
-        return "Długość pierwszego wektora to " + lenA + " a drugiego to " + lenB;
     }
 }
