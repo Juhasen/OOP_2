@@ -1,94 +1,81 @@
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+public class VectorApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            try {
+                System.out.print("Podaj pierwszy wektor(A):");
+                ArrayList<Double> vectorA = readVector(scanner);
+                System.out.print("Podaj pierwszy wektor(B):");
+                ArrayList<Double> vectorB = readVector(scanner);
+
+                if (vectorA.size() != vectorB.size()) {
+                    throw new WektoryRoznejDlugosciException(vectorA.size(), vectorB.size());
+                }
+
+                ArrayList<Double> result = addVectors(vectorA, vectorB);
+                zapiszDoPliku(result);
+                System.out.println("Wektory zostały dodane i zapisane do pliku addedVectors.txt");
+                break;
+            } catch (WektoryRoznejDlugosciException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Podane wektory mają różną długość. Spróbuj ponownie.");
+            } catch (InputMismatchException e) {
+                System.out.println("Wprowadzono niepoprawną liczbę. Spróbuj ponownie.");
+            } catch (IOException e) {
+                System.out.println("Błąd podczas zapisu do pliku.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static ArrayList<Double> readVector(Scanner scanner) {
+        ArrayList<Double> vector = new ArrayList<>();
+        String number = scanner.nextLine();
+        String[] numbers = number.split(" ");
+        for (String s : numbers) {
+            vector.add(Double.parseDouble(s));
+        }
+        return vector;
+    }
+
+
+    private static ArrayList<Double> addVectors(ArrayList<Double> vectorA, ArrayList<Double> vectorB) {
+        ArrayList<Double> result = new ArrayList<>();
+        for (int i = 0; i < vectorA.size(); i++) {
+            result.add(vectorA.get(i) + vectorB.get(i));
+        }
+        return result;
+    }
+
+    private static void zapiszDoPliku(ArrayList<Double> vector) throws IOException {
+        try (FileWriter file = new FileWriter(".idea/addedVectors.txt")) {
+            for (Double number : vector) {
+                file.write(number + " ");
+            }
+        }
+    }
+}
+
 class WektoryRoznejDlugosciException extends Exception {
-    private final int dlugosc1;
-    private final int dlugosc2;
 
-    public WektoryRoznejDlugosciException(int dlugosc1, int dlugosc2) {
-        super("Wektory mają różną długość!");
-        this.dlugosc1 = dlugosc1;
-        this.dlugosc2 = dlugosc2;
-    }
+    private final int lenA;
+    private final int lenB;
 
-    public int getDlugosc1() {
-        return dlugosc1;
-    }
-
-    public int getDlugosc2() {
-        return dlugosc2;
+    public WektoryRoznejDlugosciException(int lenA, int lenB) {
+        this.lenA = lenA;
+        this.lenB = lenB;
     }
 
     @Override
     public String getMessage() {
-        return super.getMessage() + " Długość pierwszego wektora to " + dlugosc1 + " a drugiego to " + dlugosc2;
+        return "Długość pierwszego wektora to " + lenA + " a drugiego to " + lenB;
     }
 }
-
-public class VectorApp {
-
-    public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Podaj pierwszy wektor (wciśnij Enter, aby zakończyć):");
-        ArrayList<Integer> wektor1 = wczytajWektor(scanner);
-
-        System.out.println("Podaj drugi wektor (wciśnij Enter, aby zakończyć):");
-        ArrayList<Integer> wektor2 = wczytajWektor(scanner);
-
-        try {
-            if (wektor1.size() != wektor2.size()) {
-                throw new WektoryRoznejDlugosciException(wektor1.size(), wektor2.size());
-            }
-
-            ArrayList<Integer> suma = dodajWektory(wektor1, wektor2);
-
-            zapiszWektorDoPliku(suma, "wynik.txt");
-
-            System.out.println("Wektory zostały dodane. Wynik zapisano w pliku wynik.txt.");
-        } catch (WektoryRoznejDlugosciException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Spróbuj ponownie podać wektory.");
-            main(args);
-        }
-    }
-
-    public static ArrayList<Integer> wczytajWektor(Scanner scanner) {
-        ArrayList<Integer> wektor = new ArrayList<>();
-        String liczbaTekst = scanner.nextLine();
-        while (scanner.hasNext()) {
-            try {
-                int liczba = Integer.parseInt(liczbaTekst);
-                wektor.add(liczba);
-                System.out.println(liczba);
-            } catch (NumberFormatException e) {
-                break;
-            }
-        }
-        return wektor;
-    }
-
-
-    private static ArrayList<Integer> dodajWektory(ArrayList<Integer> wektor1, ArrayList<Integer> wektor2) {
-        ArrayList<Integer> suma = new ArrayList<>();
-        for (int i = 0; i < wektor1.size(); i++) {
-            suma.add(wektor1.get(i) + wektor2.get(i));
-        }
-        return suma;
-    }
-
-    private static void zapiszWektorDoPliku(ArrayList<Integer> wektor, String nazwaPliku) throws IOException {
-        File plik = new File(nazwaPliku);
-        FileWriter writer = new FileWriter(plik);
-
-        for (Integer element : wektor) {
-            writer.write(element + " ");
-        }
-
-        writer.close();
-    }
-}
-

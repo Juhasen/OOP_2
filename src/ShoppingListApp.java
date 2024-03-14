@@ -9,7 +9,7 @@ class ShoppingList {
         products = new HashMap<>();
     }
 
-    public void loadProductsFromFile(String filePath) {
+    public int loadProductsFromFile(String filePath) {
         try {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
@@ -31,9 +31,12 @@ class ShoppingList {
                     products.get(category).add(product);
                 }
             }
+
             scanner.close();
+            return 0;
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + filePath);
+            return 1;
         }
     }
 
@@ -153,7 +156,9 @@ public class ShoppingListApp {
         Scanner scanner = new Scanner(System.in);
         ShoppingList shoppingList = new ShoppingList();
 
-        shoppingList.loadProductsFromFile(".idea/list.txt");
+        if(shoppingList.loadProductsFromFile(".idea/list.txt")==1){
+            return;
+        }
 
         while (true) {
             System.out.println("\nMenu:");
