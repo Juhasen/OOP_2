@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private static final int PORT = 5000;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(10);
+    private static final int PORT = 9000;
+    private static final ExecutorService executor = Executors.newFixedThreadPool(1000);
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -38,8 +38,17 @@ public class Server {
                 System.out.println("New connection from " + clientSocket.getInetAddress());
 
                 // Read message from client
-                String message = scanner.nextLine();
+                String message;
+                try {
+                    message = scanner.nextLine();
+                }catch (Exception e){
+                    System.out.println("Invalid input from client");
+                    return;
+                }
+
+                System.out.println("Received message: " + message);
                 double sendTime = Double.parseDouble(scanner.nextLine());
+                System.out.println("Received send time: " + sendTime);
 
                 // Simulate sending notification after specified time
                 Thread.sleep((long) (sendTime * 1000));

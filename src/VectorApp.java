@@ -43,7 +43,7 @@ public class VectorApp {
             } catch (WektoryRoznejDlugosciException | IOException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Podane wektory mają różną długość. Spróbuj ponownie.");
-            } catch(InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.out.println("Podano zły format liczby. Spróbuj ponownie.");
             }
         }
@@ -64,19 +64,19 @@ public class VectorApp {
     }
 
 
-        private static ArrayList<Double> addVectors (ArrayList < Double > vectorA, ArrayList < Double > vectorB){
-            ArrayList<Double> result = new ArrayList<>();
-            for (int i = 0; i < vectorA.size(); i++) {
-                result.add(vectorA.get(i) + vectorB.get(i));
-            }
-            return result;
+    private static ArrayList<Double> addVectors(ArrayList<Double> vectorA, ArrayList<Double> vectorB) {
+        ArrayList<Double> result = new ArrayList<>();
+        for (int i = 0; i < vectorA.size(); i++) {
+            result.add(vectorA.get(i) + vectorB.get(i));
         }
+        return result;
+    }
 
-        private static void zapiszDoPliku (ArrayList < Double > vector) throws IOException {
-            try (FileWriter file = new FileWriter("/home/krystian/IdeaProjects/PO2/.idea/addedVectors.txt")) {
-                for (Double number : vector) {
-                    file.write(number + " ");
-                }
+    private static void zapiszDoPliku(ArrayList<Double> vector) throws IOException {
+        try (FileWriter file = new FileWriter("/home/krystian/IdeaProjects/PO2/.idea/addedVectors.txt")) {
+            for (Double number : vector) {
+                file.write(number + " ");
             }
         }
     }
+}

@@ -7,9 +7,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+
+class TimeFromPastException extends Exception {
+    public TimeFromPastException(double sendTime) {
+        super("Time from past: " + sendTime + " seconds");
+    }
+}
+
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 5000;
+    private static final int SERVER_PORT = 9000;
 
     public static void main(String[] args) {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -21,7 +28,22 @@ public class Client {
             System.out.print("Enter notification message: ");
             String message = scanner.nextLine();
             System.out.print("Enter send time (in seconds): ");
-            double sendTime = scanner.nextDouble();
+            double sendTime;
+            try {
+                sendTime = scanner.nextDouble();
+                if(sendTime <= 0){
+                    throw new TimeFromPastException(sendTime);
+                }
+            }catch(TimeFromPastException e){
+                System.out.println(e.getMessage());
+                return;
+            }
+            catch (Exception e) {
+                System.out.println("Invalid input");
+                return;
+            }
+
+            long startTime = System.currentTimeMillis();
 
             // Send message and send time to server
             out.println(message);
@@ -31,6 +53,10 @@ public class Client {
             String notification = in.nextLine();
             System.out.println("Received notification: " + notification);
 
+            long endTime = System.currentTimeMillis();
+            long elapsedTime = endTime - startTime;
+
+            System.out.println("Elapsed time: " + elapsedTime + " milliseconds");
         } catch (ConnectException e) {
             System.out.println("Server is not running");
         } catch (UnknownHostException e) {
@@ -38,5 +64,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

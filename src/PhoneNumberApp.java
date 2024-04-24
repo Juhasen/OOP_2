@@ -30,26 +30,6 @@ abstract class Wpis {
     public abstract void opis();
 }
 
-class Osoba extends Wpis {
-    private final String imie;
-    private final String nazwisko;
-    final Address address;
-
-    final NrTelefoniczny nrTelefonu;
-
-    public Osoba(String imie, String nazwisko, Address address, NrTelefoniczny nrTelefonu) {
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        this.address = address;
-        this.nrTelefonu = nrTelefonu;
-    }
-
-    @Override
-    public void opis() {
-        System.out.println("Osoba: " + imie + " " + nazwisko + " " + address.getUlica() + " " + address.getMiasto() + " " + address.getKodPocztowy() + " " + address.getKraj() + " " + nrTelefonu.getNrKierunkowy() + " " + nrTelefonu.getNrTelefonu());
-    }
-}
-
 class Address {
     private final String ulica;
     private final String miasto;
@@ -84,10 +64,29 @@ class Address {
     }
 }
 
+class Osoba extends Wpis {
+    private final String imie;
+    private final String nazwisko;
+    final Address address;
+
+    final NrTelefoniczny nrTelefonu;
+
+    public Osoba(String imie, String nazwisko, Address address, NrTelefoniczny nrTelefonu) {
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.address = address;
+        this.nrTelefonu = nrTelefonu;
+    }
+
+    @Override
+    public void opis() {
+        System.out.println("Osoba: " + imie + " " + nazwisko + " " + address.getUlica() + " " + address.getMiasto() + " " +
+                address.getKodPocztowy() + " " + address.getKraj() + " " +  "+" + nrTelefonu.getNrKierunkowy() + " " + nrTelefonu.getNrTelefonu());
+    }
+}
 class Firma extends Wpis {
     private final String nazwa;
     protected final Address address;
-
     final NrTelefoniczny nrTelefonu;
 
     public Firma(String nazwa, Address address, NrTelefoniczny nrTelefonu) {
@@ -98,14 +97,13 @@ class Firma extends Wpis {
 
     @Override
     public void opis() {
-        System.out.println("Firma: " + nazwa + " " + address.getUlica() + " " + address.getMiasto() + " " + address.getKodPocztowy() + " " + address.getKraj() + " " + nrTelefonu.getNrKierunkowy() + " " + nrTelefonu.getNrTelefonu());
+        System.out.println("Firma: " + nazwa + " " + address.getUlica() + " " +
+                address.getMiasto() + " " + address.getKodPocztowy() + " " + address.getKraj() + " " +  "+" + nrTelefonu.getNrKierunkowy() + " " + nrTelefonu.getNrTelefonu());
     }
 }
 
 
 public class PhoneNumberApp {
-
-
     public static void main(String[] args) {
         Osoba osoba = new Osoba("Jan", "Kowalski", new Address("Kwiatowa", "Krakow", "30-000", "Polska"), new NrTelefoniczny(48, 123456789));
         Osoba osoba2 = new Osoba("Mateusz", "Nowak", new Address("Łąkowa", "Warszawa", "34-123", "Polska"), new NrTelefoniczny(48, 987654321));
@@ -121,11 +119,10 @@ public class PhoneNumberApp {
         ksiazkaTelefoniczna.put(osoba.nrTelefonu, osoba);
         ksiazkaTelefoniczna.put(osoba2.nrTelefonu, osoba2);
         ksiazkaTelefoniczna.put(osoba3.nrTelefonu, osoba3);
-        ksiazkaTelefoniczna.put(osoba4.nrTelefonu, osoba4);
-        ksiazkaTelefoniczna.put(firma.nrTelefonu, osoba4);
         ksiazkaTelefoniczna.put(firma.nrTelefonu, firma);
         ksiazkaTelefoniczna.put(firma2.nrTelefonu, firma2);
         ksiazkaTelefoniczna.put(firma3.nrTelefonu, firma3);
+
         System.out.println("Książka telefoniczna: " + ksiazkaTelefoniczna.size() + " wpisów");
         displayTreeMap(ksiazkaTelefoniczna);
 
@@ -135,28 +132,14 @@ public class PhoneNumberApp {
         displayTreeMap(ksiazkaTelefoniczna);
     }
     private static void displayTreeMap(TreeMap<NrTelefoniczny, Wpis> ksiazkaTelefoniczna) {
-        for (Wpis wpis : ksiazkaTelefoniczna.values()) {
-            wpis.opis();
+        for (Map.Entry<NrTelefoniczny, Wpis> entry : ksiazkaTelefoniczna.entrySet()) {
+            entry.getValue().opis();
         }
     }
-    private static void removeIdenticAddress(TreeMap<NrTelefoniczny,Wpis> ksiazkaTelefoniczna) {
-        Set<String> set = new HashSet<>();
-        Iterator<Map.Entry<NrTelefoniczny, Wpis>> iterator = ksiazkaTelefoniczna.entrySet().iterator();
-        Address address;
-        while (iterator.hasNext()) {
-            Map.Entry<NrTelefoniczny, Wpis> entry = iterator.next();
-            if (entry.getValue() instanceof Osoba) {
-                address = ((Osoba) entry.getValue()).address;
-            } else if (entry.getValue() instanceof Firma) {
-                address = ((Firma) entry.getValue()).address;
-            } else{
-                throw new IllegalArgumentException("Unknown type");
-            }
-            if (set.contains(address.toString())) {
-                iterator.remove();
-            } else {
-                set.add(address.toString());
-            }
-        }
+
+    private static void removeIdenticAddress(TreeMap<NrTelefoniczny, Wpis> ksiazkaTelefoniczna) {
+        Set<String> uniqueKeys = new HashSet<>();
+        ksiazkaTelefoniczna.entrySet().removeIf(e -> !uniqueKeys.add(e.getValue() instanceof Osoba ? ((Osoba) e.getValue()).address.getUlica() : ((Firma) e.getValue()).address.getUlica()));
     }
 }
+
